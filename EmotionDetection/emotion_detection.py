@@ -12,11 +12,24 @@ def emotion_detector(text_to_analyse: str) -> str:
             "text": text_to_analyse 
         }
     }
-    response = rq.post(url=URL, headers=HEADERS, json=json)
-    response_dict = response.json()
+    try:
+        response = rq.post(url=URL, headers=HEADERS, json=json)
+        response_dict = response.json()
 
-    emotion_dict = response_dict['emotionPredictions'][0]['emotion']
-    dominant_emotion = sorted(emotion_dict.items(), key=lambda item: item[1], reverse=True)[0][0]
-    emotion_dict['domination_emotion'] = dominant_emotion
-    
-    return emotion_dict
+        emotion_dict = response_dict['emotionPredictions'][0]['emotion']
+        dominant_emotion = sorted(emotion_dict.items(), key=lambda item: item[1], reverse=True)[0][0]
+        emotion_dict['dominant_emotion'] = dominant_emotion
+        
+        return emotion_dict
+    except:
+        return {
+            'anger': None, 
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+            }
+
+if __name__ == "__main__":
+    print(emotion_detector("Hello World"))
